@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1055/1055687.png">
+  <title>Computer Skills Library</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #4A148C;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      font-size: 22px;
+      margin: 5px 0;
+    }
+    .main-btn {
+      background: white;
+      color: #4A148C;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .main-btn:hover { background: #ddd; }
+    .book-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .book-card {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 5px 8px 8px #E91E63;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .book-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+    .book-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      border-radius: 5px;
+      background: #fff;
+      padding: 10px;
+    }
+    .book-card h3 { margin-top: 10px; }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+    @media (max-width: 600px) {
+      header { flex-direction: column; text-align: center; }
+      .main-btn { margin-bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button class="main-btn" onclick="window.location.href='index.html'">☰ Main Menu</button>
+  <h1>📚 Computer Skills Library</h1>
+</header>
+
+<div class="book-container" id="bookContainer"></div>
+
+<footer>
+  <p>© 2025 Computer Skills Library | Designed with ❤️</p>
+</footer>
+
+<script>
+  const blogs = [
+    {
+      title: "Web Development सीखने की पूरी गाइड 2025",
+      desc: "HTML, CSS, JavaScript से लेकर React और Node.js तक की जानकारी।",
+      img: "https://cdn-icons-png.flaticon.com/512/919/919827.png",
+      cat: "Web Development",
+      content: `
+        <p>Web Development 2025 में सबसे ज़्यादा डिमांड वाला कौशल है। इसमें Frontend, Backend और Full Stack डेवलपमेंट शामिल हैं।</p>
+        <p>Frontend के लिए HTML, CSS, JavaScript और React.js जैसे फ्रेमवर्क ज़रूरी हैं।</p>
+        <p>Backend के लिए Node.js, Express.js और MongoDB जैसे टूल्स का इस्तेमाल किया जाता है।</p>
+      `
+      
+    },
+    {
+      title: "Graphic Design का करियर कैसे बनाएं",
+      desc: "Photoshop, Illustrator, Canva और UI/UX डिज़ाइन सीखें।",
+      img: "https://cdn-icons-png.flaticon.com/512/2920/2920263.png",
+      cat: "Graphic Design",
+      content: `
+        <p>Graphic Design 2025 में डिजिटल मार्केटिंग और ब्रांडिंग का अहम हिस्सा है।</p>
+        <p>Photoshop, Illustrator, Canva और Figma जैसे टूल्स सीखना ज़रूरी है।</p>
+        <p>UI/UX डिज़ाइन और Motion Graphics की डिमांड तेजी से बढ़ रही है।</p>
+      `
+    },
+    {
+      title: "MS Word का सही उपयोग",
+      desc: "Document formatting, templates और automation की जानकारी।",
+      img: "https://cdn-icons-png.flaticon.com/512/732/732223.png",
+      cat: "MS Word",
+      content: `
+        <p>MS Word सबसे लोकप्रिय वर्ड प्रोसेसिंग सॉफ्टवेयर है।</p>
+        <p>इसमें Resume, Report और Templates बनाना आसान है।</p>
+        <p>Mail Merge और Smart Formatting जैसी सुविधाएं प्रोफेशनल डॉक्यूमेंट बनाने में मदद करती हैं।</p>
+      `
+    },
+    {
+      title: "MS Excel में Advanced Skills",
+      desc: "Formulas, Charts, Pivot Tables और Data Analysis।",
+      img: "https://cdn-icons-png.flaticon.com/512/732/732220.png",
+      cat: "MS Excel",
+      content: `
+        <p>MS Excel डेटा एनालिसिस के लिए सबसे पावरफुल टूल है।</p>
+        <p>VLOOKUP, IF, SUMIFS और Pivot Table जैसी फ़ॉर्मूला स्किल्स ज़रूरी हैं।</p>
+        <p>Charts और Dashboards बनाने के लिए Excel का उपयोग बढ़ रहा है।</p>
+      `
+    },
+    {
+      title: "PowerPoint से प्रभावशाली प्रेजेंटेशन",
+      desc: "Design templates और animations के साथ बेहतर स्लाइड्स।",
+      img: "https://cdn-icons-png.flaticon.com/512/732/732224.png",
+      cat: "PowerPoint",
+      content: `
+        <p>PowerPoint प्रोफेशनल प्रेजेंटेशन बनाने का सबसे अच्छा टूल है।</p>
+        <p>Animations, Transitions और SmartArt से स्लाइड्स को आकर्षक बनाया जा सकता है।</p>
+        <p>Pitch Deck और Business Presentations में इसकी डिमांड ज़्यादा है।</p>
+      `
+    },
+    {
+      title: "Power BI के साथ Data Visualization",
+      desc: "Dashboard, Reports और Business Analytics की जानकारी।",
+      img: "https://cdn-icons-png.flaticon.com/512/906/906324.png",
+      cat: "Power BI",
+      content: `
+        <p>Power BI एक Business Intelligence टूल है जो डेटा को विज़ुअल फॉर्म में दिखाता है।</p>
+        <p>Interactive Dashboards और Reports बनाने में यह बहुत उपयोगी है।</p>
+        <p>Excel और SQL से कनेक्ट करके Power BI पर एनालिसिस आसान हो जाता है।</p>
+      `
+    },
+    {
+      title: "Data Analysis की शुरुआत",
+      desc: "Python, Excel, Power BI और SQL के साथ डेटा समझें।",
+      img: "https://cdn-icons-png.flaticon.com/512/841/841364.png",
+      cat: "Data Analysis",
+      content: `
+        <p>Data Analysis 2025 में सबसे हाई-डिमांड स्किल है।</p>
+        <p>Python, Excel, SQL और Power BI का ज्ञान डेटा एनालिस्ट के लिए ज़रूरी है।</p>
+        <p>Data Cleaning, Visualization और Insights तैयार करना मुख्य कार्य हैं।</p>
+      `
+    },
+    {
+      title: "Computer Networking का बेसिक गाइड",
+      desc: "LAN, WAN, IP Address, और नेटवर्क सिक्योरिटी की जानकारी।",
+      img: "https://cdn-icons-png.flaticon.com/512/3063/3063446.png",
+      cat: "Computer Networking",
+      content: `
+        <p>Computer Networking कंप्यूटर सिस्टम्स को जोड़ने की प्रक्रिया है।</p>
+        <p>LAN, WAN, IP Address और Routing इसके मुख्य हिस्से हैं।</p>
+        <p>Cyber Security और Cloud Networking की डिमांड तेजी से बढ़ रही है।</p>
+      `
+    },
+    {
+      title: "Cyber Security में करियर",
+      desc: "Ethical Hacking, Penetration Testing और Network Security।",
+      img: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      cat: "Cyber Security",
+      content: `
+        <p>Cyber Security डिजिटल डेटा की सुरक्षा के लिए जरूरी है।</p>
+        <p>Ethical Hacking, Malware Analysis और Penetration Testing सीखना फायदेमंद है।</p>
+        <p>Cyber Attacks को रोकने के लिए Security Tools का ज्ञान आवश्यक है।</p>
+      `
+    },
+    {
+      title: "Gaming का भविष्य 2025 में",
+      desc: "AI, VR और Cloud Gaming का बढ़ता प्रभाव।",
+      img: "https://cdn-icons-png.flaticon.com/512/3616/3616793.png",
+      cat: "Gaming",
+      content: `
+        <p>Gaming इंडस्ट्री 2025 में AI और VR की वजह से तेजी से बढ़ रही है।</p>
+        <p>Cloud Gaming प्लेटफॉर्म्स ने हाई-एंड गेमिंग को सभी के लिए सुलभ बनाया है।</p>
+        <p>ई-स्पोर्ट्स करियर बनाने का एक नया रास्ता बन चुका है।</p>
+      `
+    }
+  ];
+
+  const container = document.getElementById("bookContainer");
+
+  blogs.forEach(blog => {
+    const card = document.createElement("div");
+    card.className = "book-card";
+    card.innerHTML = `
+      <img src="${blog.img}" alt="${blog.title}">
+      <h3>${blog.title}</h3>
+      <p>${blog.desc}</p>
+    `;
+    card.onclick = () => {
+      window.location.href = "topic.html?name=" + encodeURIComponent(blog.title);
+    };
+    container.appendChild(card);
+  });
+</script>
+
+</body>
+</html>

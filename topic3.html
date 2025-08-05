@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1055/1055687.png">
+  <title>ब्लॉग आर्टिकल</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial; background: #f3f4f6; margin: 0; padding: 0; }
+    header {
+      background: linear-gradient(to right, #4A148C, #880E4F);
+      color: white;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 18px;
+    }
+    header h2 { font-size: 22px; margin: 0; }
+    .back-btn {
+      background: #ff5722; color: white; border: none;
+      padding: 8px 14px; border-radius: 6px; cursor: pointer;
+    }
+    .container {
+      max-width: 850px; margin: 25px auto; background: white;
+      padding: 22px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .container img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+    .container h1 { font-size: 26px; }
+    .container p { font-size: 16px; color: #444; line-height: 1.6; }
+    .points { margin-top: 15px; padding-left: 20px; }
+    .points li { margin-bottom: 8px; }
+
+    .nav-buttons { display: flex; justify-content: space-between; margin-top: 20px; }
+    .nav-buttons button {
+      background: #4A148C; color: white; border: none;
+      padding: 10px 16px; border-radius: 6px; cursor: pointer;
+    }
+    .nav-buttons button:hover { background: #6a1b9a; }
+
+    .related { margin-top: 30px; }
+    .related h3 { margin-bottom: 10px; }
+    .related-list { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 12px; }
+    .related-card {
+      background: #fafafa; padding: 10px; border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer;
+    }
+    .related-card img { width: 100%; border-radius: 6px; height: 120px; object-fit: cover; }
+    .related-card h4 { font-size: 16px; margin: 8px 0; }
+
+    .floating-share {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25D366;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.3s;
+    }
+    .floating-share:hover { transform: scale(1.1); }
+    .floating-share i { font-size: 32px; color: white; }
+  </style>
+</head>
+<body>
+
+<header>
+  <button class="back-btn" onclick="goBack()">⬅ Back</button>
+  <h2>📖 ब्लॉग आर्टिकल</h2>
+  <div></div>
+</header>
+
+<div class="container">
+  <img id="articleImg" />
+  <h1 id="articleTitle"></h1>
+  <p id="articleDesc"></p>
+
+  <h3>🔹 मुख्य बातें:</h3>
+  <ul class="points" id="articlePoints"></ul>
+
+  <div class="nav-buttons">
+    <button id="prevBtn">⬅ पिछला लेख</button>
+    <button id="nextBtn">अगला लेख ➡</button>
+  </div>
+
+  <div class="related">
+    <h3>📌 संबंधित आर्टिकल</h3>
+    <div class="related-list" id="relatedArticles"></div>
+  </div>
+</div>
+
+<a id="whatsappShare" class="floating-share" target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+  function goBack(){ 
+    window.location.href="software.html"; 
+  }
+
+  const blogs = JSON.parse(localStorage.getItem("blogsData") || "[]");
+  const selectedTitle = localStorage.getItem("selectedArticle");
+  let index = blogs.findIndex(b => b.title === selectedTitle);
+  const article = blogs[index];
+
+  function loadArticle(i){
+    if(i<0 || i>=blogs.length) return;
+    localStorage.setItem("selectedArticle", blogs[i].title);
+    window.location.reload();
+  }
+
+  if(article){
+    document.getElementById("articleImg").src = article.img;
+    document.getElementById("articleTitle").innerText = article.title;
+    document.getElementById("articleDesc").innerText = article.desc;
+
+    const pointsBox = document.getElementById("articlePoints");
+    pointsBox.innerHTML = "";
+    if(article.points && article.points.length){
+      article.points.forEach(p=>{
+        let li=document.createElement("li");
+        li.innerText=p;
+        pointsBox.appendChild(li);
+      });
+    }
+
+    document.getElementById("prevBtn").onclick = ()=>loadArticle(index-1);
+    document.getElementById("nextBtn").onclick = ()=>loadArticle(index+1);
+
+    let related = blogs.filter((b,i)=>i!==index).slice(0,3);
+    const relatedDiv=document.getElementById("relatedArticles");
+    related.forEach(r=>{
+      relatedDiv.innerHTML+=`
+        <div class="related-card" onclick="openArticle('${r.title}')">
+          <img src="${r.img}">
+          <h4>${r.title}</h4>
+        </div>`;
+    });
+
+    const msg=`📖 ${article.title}\n\n${article.desc}\n\n👉 और पढ़ें: आपकीWebsite.com`;
+    document.getElementById("whatsappShare").href="https://wa.me/?text="+encodeURIComponent(msg);
+  }
+
+  function openArticle(title){
+    localStorage.setItem("selectedArticle", title);
+    window.location.reload();
+  }
+</script>
+
+</body>
+</html>
